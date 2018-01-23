@@ -241,10 +241,20 @@
 				} );
 			},
 
-			_loadWidget: function( editor, widget, def, file ) {
+			/*
+			 * Initiates an upload process on a given widget. It does that by firing a {@link CKEDITOR.fileTools#fileLoader} request.
+			 *
+			 * @private
+			 * @param {CKEDITOR.editor} editor Editor instance.
+			 * @param {CKEDITOR.plugins.widget} widget Widget to be loaded.
+			 * @param {CKEDITOR.plugins.widget.definition} def Loaded widget definition.
+			 * @param {File/String} file File or base64-encoded file string to be uploaded.
+			 * @param {String} [fileName] If `file` is passed as a base64-encoded string, this field should contain a name.
+			 */
+			_loadWidget: function( editor, widget, def, file, fileName ) {
 				var uploads = editor.uploadRepository,
 					loadMethod = def.loadMethod || 'loadAndUpload',
-					loader = uploads.create( file, undefined, def.loaderType );
+					loader = uploads.create( file, fileName, def.loaderType );
 
 				function failHandling( evt ) {
 					if ( widget.fire( 'uploadFailed', evt ) !== false ) {
