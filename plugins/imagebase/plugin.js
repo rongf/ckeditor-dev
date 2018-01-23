@@ -286,7 +286,7 @@
 			 * @param {String} blobUrl Blob URL of an image.
 			 * @returns {CKEDITOR.plugins.widget/undefined} The widget instance or `undefined` if not successful.
 			 */
-			_insertWidget: function( editor, widgetDef, blobUrl ) {
+			_insertWidget: function( editor, widgetDef, blobUrl, finalize ) {
 				var tplParams = ( typeof widgetDef.defaults == 'function' ? widgetDef.defaults() : widgetDef.defaults ) || {};
 
 				tplParams.src = blobUrl;
@@ -298,9 +298,13 @@
 				// Append wrapper to a temporary document. This will unify the environment
 				// in which #data listeners work when creating and editing widget.
 				temp.append( wrapper );
-				editor.widgets.initOn( element, widgetDef );
 
-				return editor.widgets.finalizeCreation( temp );
+				if ( finalize !== false ) {
+					editor.widgets.initOn( element, widgetDef );
+					return editor.widgets.finalizeCreation( temp );
+				} else {
+					return element;
+				}
 			}
 
 			/*
@@ -357,8 +361,8 @@
 			},
 
 			template: '<figure class="{imageClass}">' +
-					'<img alt="{alt}" src="{src}" />' +
-					'<figcaption>{caption}</figcaption>' +
+				'<img alt="{alt}" src="{src}" />' +
+				'<figcaption>{caption}</figcaption>' +
 				'</figure>',
 
 			allowedContent: {
